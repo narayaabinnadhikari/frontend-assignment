@@ -11,3 +11,6 @@
 #### Starting the project
 
 > npm run dev
+
+##  URL of Live demo on Netlify: 
+> https://main--keen-stardust-e8b7c2.netlify.app/
