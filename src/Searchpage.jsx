@@ -1,48 +1,64 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-function Searchpage() {
+import { useQuery } from "react-query";
+
+import Header from "./components/Header";
+import Products from "./components/Products";
+
+function SearchPage() {
+  const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
 
-  const handleSearch = (event) => {
-    event.preventDefault();
-    navigate("/results?query=${searchQuery}");
+  const { isLoading, error, data } = useQuery("repoData", () =>
+    fetch(`https://fakestoreapi.com/products?query`).then((res) => res.json())
+  );
+
+  if (isLoading) return "Loading...";
+  if (error) return "An error has occured: " + error.message;
+  function handleSubmit(e) {
+    e.preventDefault();
+    setSearchQuery(searchInput);
+  }
+
+  const getItems = () => {
+    if (!searchQuery) return [];
+
+    return data.filter((item) =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   };
-  const data = ["price", "item", "size"];
 
+  console.log(searchQuery);
   return (
     <>
-      <form onSubmit={handleSearch} className="flex items-center">
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.nodeValue)}
-          className=" py-2 px-4 border border-gray-300 rounded-l mr-2 "
-        ></input>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Search{" "}
-        </button>
-      </form>
-      <div>
-        <h1 className="text-2xl font-bold">LIST OF RESULTS</h1>
-        <ul className="space-y-4">
-          {data.map((item) => (
-            <li key={item.id} className="bg-gray-100 p-4 rounded">
-              <div>
-                <h2 className="text-lg font-semibold">{item.title}</h2>
-                <p className="text-green-500">${item.price}</p>
-              </div>
-              <Link to={"/details/${item.id}"}>{item}</Link>
-            </li>
-          ))}
-        </ul>
+      <Header hideSearch />
+      <div className="px-10">
+        <div className="w-full pt-4 justify-center">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full flex justify-center  mt-5"
+          >
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
+              className="px-4 w-1/2 border border-gray-300 rounded-md mr-3 py-4 text-2xl font-bold"
+            ></input>
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded text-2xl font-bold"
+            >
+              Search
+            </button>
+          </form>
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold mt-10">LIST OF RESULTS</h1>
+          <Products data={getItems()} />
+        </div>
       </div>
     </>
   );
 }
 
-export default Searchpage;
+export default SearchPage;

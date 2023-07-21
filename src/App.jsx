@@ -1,17 +1,22 @@
+import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Searchpage from "./Searchpage";
+
 import Details from "./Details";
-import Landingpage from "./Landingpage";
+import Searchpage from "./SearchPage";
+import Landingpage from "./LandingPage";
 
 function App() {
+  const queryClient = new QueryClient();
   return (
-    <Router>
-      <Routes>
-        <Route path="/" Component={Landingpage} />
-        <Route path="/Searchpage" Component={Searchpage} />
-        <Route path="/details/:id" Component={Details} />
-      </Routes>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Routes>
+          <Route path="/" Component={Landingpage} />
+          <Route path="/search" Component={Searchpage} />
+          <Route path="/details/:id" Component={Details} />
+        </Routes>
+      </Router>
+    </QueryClientProvider>
   );
 }
 
