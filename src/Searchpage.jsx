@@ -27,7 +27,6 @@ function SearchPage() {
     );
   };
 
-  console.log(searchQuery);
   return (
     <>
       <Header hideSearch />
@@ -46,7 +45,7 @@ function SearchPage() {
             ></input>
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded text-2xl font-bold"
+              className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-8 rounded text-2xl font-bold"
             >
               Search
             </button>
